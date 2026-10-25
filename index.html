@@ -18,9 +18,9 @@
             theme: {
                 extend: {
                     colors: {
-                        cosmicLatte: '#FFF8E7',
+                        cosmicLatte: '#F5E6CC', // ปรับให้เข้มขึ้นจากเดิมเล็กน้อย
                         sangria: '#930500',
-                        cornflower: '#95BBEA',
+                        cornflower: '#7AAAE8', // ปรับสีฟ้าให้เข้มขึ้นกว่าเดิมนิดหน่อย
                     },
                     fontFamily: {
                         sans: ['Kanit', 'sans-serif'],
@@ -32,7 +32,7 @@
     <style>
         body {
             font-family: 'Kanit', sans-serif;
-            background-color: #FFF8E7;
+            background-color: #F5E6CC;
             overflow-x: hidden;
         }
         .rose-container {
@@ -51,36 +51,14 @@
             90% { opacity: 0.8; }
             100% { opacity: 0; top: 110%; transform: translateX(100px) rotate(360deg); }
         }
-        @keyframes spinSlow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .animate-spin-slow { animation: spinSlow 6s linear infinite; }
     </style>
 </head>
 <body class="bg-cosmicLatte text-gray-700 min-h-screen flex flex-col">
 
     <div class="rose-container" id="roseContainer"></div>
 
-    <!-- Floating Music Player Widget -->
-    <div class="fixed bottom-4 left-4 z-50 bg-white/90 backdrop-blur-md px-3 py-2 rounded-2xl shadow-lg border border-cornflower flex items-center space-x-2">
-        <div class="w-8 h-8 rounded-full bg-[#95BBEA]/20 flex items-center justify-center text-sangria animate-spin-slow">
-            <i class="fa-solid fa-music"></i>
-        </div>
-        <div class="text-xs">
-            <p class="font-bold text-gray-700">เพลงประกอบร้าน</p>
-            <p class="text-[10px] text-gray-400" id="musicStatus">กดเล่นเพลง</p>
-        </div>
-        <button onclick="toggleMusic()" id="musicToggleBtn" class="bg-sangria hover:opacity-90 text-white w-8 h-8 rounded-xl flex items-center justify-center text-xs transition-all shadow-sm">
-            <i class="fa-solid fa-play" id="musicIcon"></i>
-        </button>
-    </div>
-
-    <!-- Hidden YouTube iframe container -->
-    <div id="youtubePlayerContainer" style="display:none;"></div>
-
     <!-- Navigation Bar -->
-    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b-2 border-cornflower/50 shadow-sm">
+    <nav class="bg-white/85 backdrop-blur-md sticky top-0 z-40 border-b-2 border-cornflower/60 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center space-x-3 cursor-pointer" onclick="playCuteSound(); switchTab('shop')">
@@ -424,7 +402,6 @@
 
         let currentUser = null;
         let isAdminLoggedIn = false;
-        let isMusicPlaying = false;
 
         let products = [];
         let orders = [];
@@ -436,42 +413,27 @@
             accNumber: "4362214218",
             accBank: "ธนาคารกสิกรไทย (KBANK)",
             accWallet: "0644644210",
-            accNote: "ซื้อบัญชี@เมเม่"
+            accNote: "ซื้อบัญชี@เมเม่ เลขบัญชี ทรูวอเวอ"
         };
-
-        function toggleMusic() {
-            playCuteSound();
-            const container = document.getElementById('youtubePlayerContainer');
-            const icon = document.getElementById('musicIcon');
-            const status = document.getElementById('musicStatus');
-            
-            if (!isMusicPlaying) {
-                container.innerHTML = `<iframe width="200" height="200" src="https://www.youtube.com/embed/dmepKfmk7ms?autoplay=1&loop=1&playlist=dmepKfmk7ms" frameborder="0" allow="autoplay"></iframe>`;
-                icon.className = "fa-solid fa-pause";
-                status.innerText = "กำลังเล่นเพลง 🎶";
-                isMusicPlaying = true;
-            } else {
-                container.innerHTML = "";
-                icon.className = "fa-solid fa-play";
-                status.innerText = "หยุดเล่นเพลง";
-                isMusicPlaying = false;
-            }
-        }
 
         function playCuteSound() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
+                
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.08);
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.1);
+                
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+                
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
+                
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.08);
+                osc.stop(audioCtx.currentTime + 0.12);
             } catch (e) {}
         }
 
@@ -586,7 +548,7 @@
                     <div class="bg-white rounded-3xl overflow-hidden border border-cornflower/40 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
                         <div>
                             <div class="h-44 w-full overflow-hidden bg-cornflower/20 relative">
-                                <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300/95BBEA/930500?text=MOMXY.STORE'">
+                                <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300/7AAAE8/930500?text=MOMXY.STORE'">
                                 <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-xs px-2.5 py-1 rounded-full font-bold shadow-sm ${isOutOfStock ? 'text-rose-500' : 'text-emerald-600'}">
                                     ${isOutOfStock ? 'สินค้าหมด' : `คงเหลือ ${stockCount} ชิ้น`}
                                 </span>
