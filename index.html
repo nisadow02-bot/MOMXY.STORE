@@ -155,7 +155,7 @@
                     <i class="fa-solid fa-coins text-2xl text-amber-500"></i>
                     <div>
                         <h2 class="text-xl font-bold text-gray-800">เติมเครดิตเข้าระบบอัตโนมัติ</h2>
-                        <p class="text-xs text-gray-400">โอนเงินแล้วกรอกจำนวนเงินและแนบสลิป เครดิตเข้าทันที ไม่ต้องรออนุมัติ</p>
+                        <p class="text-xs text-gray-400">โอนเงินแล้วกรอกจำนวนเงินและลิงก์รูปสลิป เครดิตเข้าทันที ไม่ต้องรออนุมัติ</p>
                     </div>
                 </div>
 
@@ -186,11 +186,14 @@
                         <input type="number" id="topupAmount" required min="1" placeholder="เช่น 50" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">แนบรูปภาพสลิปการโอนเงิน</label>
-                        <input type="file" id="topupSlipFile" accept="image/*" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs bg-gray-50 file:mr-4 file:py-1.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sky-100 file:text-sky-700 hover:file:bg-sky-200">
-                        <div id="slipPreviewContainer" class="mt-2 hidden text-center">
-                            <img id="slipPreviewImg" class="max-h-32 mx-auto rounded-xl border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-semibold text-gray-600">ลิงก์รูปภาพสลิป (Image URL)</label>
+                            <button type="button" onclick="openSlipGuideModal()" class="text-xs text-sky-600 font-bold underline hover:text-sky-800">
+                                <i class="fa-solid fa-circle-question mr-1"></i> วิธีทำรูปสลิปเป็นลิงก์ (คลิกดูวิธี)
+                            </button>
                         </div>
+                        <input type="text" id="topupSlipUrl" required placeholder="วางลิงก์รูปสลิปที่นี่ (จาก https://th.imgbb.com/)" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300">
+                        <p class="text-[11px] text-gray-400 mt-1">อัปโหลดสลิปแปลงเป็นลิงก์ได้ที่เว็บ: <a href="https://th.imgbb.com/" target="_blank" class="text-sky-500 underline font-semibold">https://th.imgbb.com/</a></p>
                     </div>
                     <button type="submit" class="w-full bg-gradient-to-r from-amber-400 to-sky-500 text-white font-bold py-3 rounded-xl text-sm shadow-md hover:opacity-95 transition-all">
                         <i class="fa-solid fa-paper-plane mr-1"></i> เติมเครดิตเข้าระบบทันที (บันทึกลง Google Sheet)
@@ -318,7 +321,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b border-gray-100 gap-4">
                     <div>
                         <h2 class="text-xl font-bold text-blue-900 flex items-center"><i class="fa-solid fa-sliders text-sky-500 mr-2"></i> ระบบจัดการหลังบ้าน MOMXY.STORE</h2>
-                        <p class="text-xs text-gray-500">จัดการสต๊อกสินค้า ตรวจสอบสลิปที่ลูกค้าเติมเข้ามา และดูยอดขาย Sales</p>
+                        <p class="text-xs text-gray-500">จัดการสต๊อกสินค้า (เมล / พาส / ลิงก์ จบบรรทัดนับ 1 สต๊อก) และตรวจสอบยอดเติมเงิน</p>
                     </div>
                     <div class="flex space-x-2">
                         <button onclick="playCuteSound(); fetchDataFromSheet(true)" class="bg-sky-100 hover:bg-sky-200 text-sky-700 text-xs font-bold px-3 py-2 rounded-xl transition-all">
@@ -392,8 +395,8 @@
                                 <textarea id="pDesc" rows="2" placeholder="รายละเอียด..." class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm"></textarea>
                             </div>
                             <div class="md:col-span-2">
-                                <label class="block text-xs font-semibold text-gray-600 mb-1">รหัส / บัญชีสินค้า (Codes - คั่นด้วย / )</label>
-                                <textarea id="pCodes" rows="3" placeholder="email / pass" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm font-mono text-xs"></textarea>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">รหัส / บัญชีสินค้า (วางพร้อมกัน: เมล พาส ลิงค์ จบบรรทัดนับ 1 สต๊อก)</label>
+                                <textarea id="pCodes" rows="4" placeholder="email1 / pass1 / link1&#10;email2 / pass2 / link2" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm font-mono text-xs"></textarea>
                             </div>
                         </div>
                         <div class="mt-4 flex justify-between items-center">
@@ -489,6 +492,20 @@
         </section>
     </main>
 
+    <!-- Slip Guide Modal -->
+    <div id="slipGuideModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-xl border border-yellow-200 text-center space-y-4">
+            <h3 class="text-lg font-bold text-blue-900">วิธีทำรูปสลิปเป็นลิงก์</h3>
+            <p class="text-xs text-gray-600">อัปโหลดสลิปของคุณที่เว็บไซต์ <a href="https://th.imgbb.com/" target="_blank" class="text-sky-600 underline font-semibold">https://th.imgbb.com/</a> แล้วคัดลอกลิงก์รูปภาพมาวาง</p>
+            <div class="bg-yellow-50 p-2 rounded-2xl border border-yellow-200">
+                <img src="https://i.ibb.co/WvNKn4W1/phonto.jpg" alt="วิธีใส่ลิงก์สลิป" class="max-h-60 mx-auto rounded-xl shadow-sm border border-gray-200">
+            </div>
+            <button onclick="closeSlipGuideModal()" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 rounded-xl text-sm shadow-sm transition-all">
+                เข้าใจแล้ว
+            </button>
+        </div>
+    </div>
+
     <!-- Modals -->
     <div id="authModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-xl border border-yellow-200">
@@ -547,17 +564,15 @@
             noteSlip: "ซื้อขายกับMOMXY"
         };
 
-        document.getElementById('topupSlipFile').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    document.getElementById('slipPreviewImg').src = evt.target.result;
-                    document.getElementById('slipPreviewContainer').classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+        function openSlipGuideModal() {
+            playCuteSound();
+            document.getElementById('slipGuideModal').classList.remove('hidden');
+        }
+
+        function closeSlipGuideModal() {
+            playCuteSound();
+            document.getElementById('slipGuideModal').classList.add('hidden');
+        }
 
         function toggleMusic() {
             playCuteSound();
@@ -692,13 +707,13 @@
             }
         }
 
-        // เติมเครดิตแบบอัตโนมัติ ไม่ต้องรออนุมัติ เครดิตเข้าทันที
         function handleTopupSubmit(e) {
             e.preventDefault();
             if (!currentUser) { openAuthModal(); return; }
             playCuteSound();
+            
             const amount = parseFloat(document.getElementById('topupAmount').value);
-            const slipPreviewImg = document.getElementById('slipPreviewImg').src;
+            const slipUrl = document.getElementById('topupSlipUrl').value.trim();
 
             Swal.fire({ title: 'กำลังเติมเครดิตอัตโนมัติ...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
 
@@ -708,12 +723,10 @@
                 if (document.body.contains(script)) document.body.removeChild(script);
 
                 if (response && response.status === 'success') {
-                    // เติมเครดิตให้ลูกค้าทันทีโดยไม่ต้องรออนุมัติ
                     currentUser.credit = (currentUser.credit || 0) + amount;
                     updateUserUI();
                     document.getElementById('topupAmount').value = '';
-                    document.getElementById('topupSlipFile').value = '';
-                    document.getElementById('slipPreviewContainer').classList.add('hidden');
+                    document.getElementById('topupSlipUrl').value = '';
 
                     Swal.fire({
                         icon: 'success',
@@ -731,7 +744,7 @@
             };
 
             const script = document.createElement('script');
-            script.src = `${APPS_SCRIPT_URL}?action=topup&username=${encodeURIComponent(currentUser.username)}&amount=${amount}&slip=${encodeURIComponent(slipPreviewImg)}&callback=${callbackName}`;
+            script.src = `${APPS_SCRIPT_URL}?action=topup&username=${encodeURIComponent(currentUser.username)}&amount=${amount}&slip=${encodeURIComponent(slipUrl)}&callback=${callbackName}`;
             document.body.appendChild(script);
         }
 
@@ -887,7 +900,7 @@
                 document.getElementById('pName').value = p.name;
                 document.getElementById('pPrice').value = p.price;
                 document.getElementById('pDesc').value = p.desc || '';
-                document.getElementById('pCodes').value = '';
+                document.getElementById('pCodes').value = p.codes ? p.codes.join('\n') : '';
                 document.getElementById('pImgUrl').value = p.img || '';
             }
         }
@@ -897,6 +910,7 @@
             document.getElementById('productForm').reset();
         }
 
+        // รองรับการวางสต๊อก เมล / พาส / ลิงก์ จบบรรทัดนับ 1 สต๊อก
         function handleAddProduct(e) {
             e.preventDefault();
             playCuteSound();
@@ -906,7 +920,9 @@
             const desc = document.getElementById('pDesc').value.trim();
             const rawCodes = document.getElementById('pCodes').value.trim();
             let imgUrl = document.getElementById('pImgUrl').value.trim() || "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500&auto=format&fit=crop&q=60";
-            const newCodesArray = rawCodes ? rawCodes.split('/').map(c => c.trim()).filter(c => c.length > 0) : [];
+            
+            // แยกบรรทัดละ 1 สต๊อก
+            const newCodesArray = rawCodes ? rawCodes.split('\n').map(c => c.trim()).filter(c => c.length > 0) : [];
 
             if (selectedId) {
                 let p = products.find(item => item.id === selectedId);
@@ -922,7 +938,7 @@
             resetProductForm();
             renderProducts();
             renderAdminView();
-            Swal.fire('สำเร็จ', 'บันทึกสินค้าเรียบร้อย', 'success');
+            Swal.fire('สำเร็จ', 'บันทึกสต๊อกสินค้าเรียบร้อย (นับบรรทัดละ 1 สต๊อก)', 'success');
         }
 
         function renderAdminView() {
@@ -937,7 +953,6 @@
             document.getElementById('adminTotalSalesCount').innerText = sales.length + ' รายการ';
             document.getElementById('adminTotalStockCount').innerText = totalStockCount + ' ชิ้น';
 
-            // Topups Log Table
             const tTbody = document.getElementById('adminTopupsTableBody');
             tTbody.innerHTML = '';
             if (topups.length === 0) {
@@ -949,7 +964,7 @@
                             <td class="p-2.5 font-mono">${t.topupId}</td>
                             <td class="p-2.5 font-semibold text-gray-800">${t.username}</td>
                             <td class="p-2.5 text-blue-600 font-bold">+${t.amount} ฿</td>
-                            <td class="p-2.5">${t.slip ? `<a href="${t.slip}" target="_blank" class="text-sky-600 underline font-semibold">ดูสลิป</a>` : 'ไม่มีสลิป'}</td>
+                            <td class="p-2.5">${t.slip ? `<a href="${t.slip}" target="_blank" class="text-sky-600 underline font-semibold">1 รูปภาพ</a>` : 'ไม่มีสลิป'}</td>
                             <td class="p-2.5 text-[11px] text-gray-400">${t.date}</td>
                             <td class="p-2.5"><span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold text-[10px]">${t.status}</span></td>
                         </tr>
@@ -957,7 +972,6 @@
                 });
             }
 
-            // Products Table
             const pTbody = document.getElementById('adminProductTableBody');
             pTbody.innerHTML = '';
             products.forEach(p => {
@@ -975,7 +989,6 @@
                 `;
             });
 
-            // Sales Table
             const sTbody = document.getElementById('adminSalesTableBody');
             document.getElementById('adminTotalSalesBadge').innerText = `${sales.length} รายการ`;
             sTbody.innerHTML = '';
